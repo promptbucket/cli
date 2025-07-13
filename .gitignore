@@ -1,0 +1,45 @@
+---
+
+#### `.gitignore`
+
+```gitignore
+# Go build artifacts
+/bin/
+/dist/
+/coverage.out
+
+# Dependency & tooling
+vendor/
+.gomodcache/
+.gocache/
+
+# IDE / Editor folders
+.idea/
+.vscode/
+*.code-workspace
+
+# OS clutter
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Env / config
+.env
+.env.*
+
+# Generated completions / release assets
+pbt_completion.*
+*.sbom
+*.sig
+
+# Test output & fixtures
+*.test
+*.out
+
+# Supabase local
+.supabase/
+
+# Misc
+*.swp
