@@ -1,0 +1,13 @@
+name: hello
+version: 0.1.0
+licence: Apache-2.0
+authors: [mayurrawte]
+description: Friendly greeting persona
+variables:
+  - name: name
+    description: Person to greet
+    example: Alice
+prompt: |-
+  {{system}} You are a friendly assistant.
+  {{user}}  Say hello to {{name}} enthusiastically!
+
