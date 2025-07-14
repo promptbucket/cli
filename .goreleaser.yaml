@@ -1,0 +1,111 @@
+project_name: promptbucket
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: ./main.go
+    binary: promptbucket
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+brews:
+  - name: promptbucket
+    tap:
+      owner: promptbucket
+      name: homebrew-tap
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    homepage: https://github.com/promptbucket/cli
+    description: "A CLI tool for managing prompt buckets"
+    license: MIT
+    install: |
+      bin.install "promptbucket"
+    test: |
+      system "#{bin}/promptbucket", "version"
+
+nfpms:
+  - id: packages
+    package_name: promptbucket
+    file_name_template: "{{ .ConventionalFileName }}"
+    vendor: PromptBucket
+    homepage: https://github.com/promptbucket/cli
+    maintainer: PromptBucket Team <team@promptbucket.com>
+    description: A CLI tool for managing prompt buckets
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
+    dependencies:
+      - git
+    recommends:
+      - curl
+    contents:
+      - src: ./completions/promptbucket.bash
+        dst: /usr/share/bash-completion/completions/promptbucket
+        file_info:
+          mode: 0644
+      - src: ./completions/promptbucket.fish
+        dst: /usr/share/fish/vendor_completions.d/promptbucket.fish
+        file_info:
+          mode: 0644
+      - src: ./completions/promptbucket.zsh
+        dst: /usr/share/zsh/vendor-completions/_promptbucket
+        file_info:
+          mode: 0644
+
+release:
+  github:
+    owner: promptbucket
+    name: cli
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Release {{ .Tag }}
+    
+    Welcome to this new release!
+  footer: |
+    ## Docker Images
+    
+    - `ghcr.io/promptbucket/cli:{{ .Tag }}`
+    - `ghcr.io/promptbucket/cli:latest`
