@@ -47,10 +47,11 @@ changelog:
       - '^test:'
 
 brews:
-  - name: promptbucket
-    tap:
+  - repository:
       owner: promptbucket
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    name: promptbucket
     commit_author:
       name: goreleaserbot
       email: bot@goreleaser.com
@@ -79,19 +80,19 @@ nfpms:
       - git
     recommends:
       - curl
-    contents:
-      - src: ./completions/promptbucket.bash
-        dst: /usr/share/bash-completion/completions/promptbucket
-        file_info:
-          mode: 0644
-      - src: ./completions/promptbucket.fish
-        dst: /usr/share/fish/vendor_completions.d/promptbucket.fish
-        file_info:
-          mode: 0644
-      - src: ./completions/promptbucket.zsh
-        dst: /usr/share/zsh/vendor-completions/_promptbucket
-        file_info:
-          mode: 0644
+    # contents:
+    #   - src: ./completions/promptbucket.bash
+    #     dst: /usr/share/bash-completion/completions/promptbucket
+    #     file_info:
+    #       mode: 0644
+    #   - src: ./completions/promptbucket.fish
+    #     dst: /usr/share/fish/vendor_completions.d/promptbucket.fish
+    #     file_info:
+    #       mode: 0644
+    #   - src: ./completions/promptbucket.zsh
+    #     dst: /usr/share/zsh/vendor-completions/_promptbucket
+    #     file_info:
+    #       mode: 0644
 
 release:
   github:
