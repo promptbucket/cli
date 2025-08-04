@@ -4,7 +4,6 @@ title: Prompt Package Manifest
 type: object
 required: [name, version, licence, prompt]
 additionalProperties: false
-
 properties:
   name:
     type: string
@@ -26,6 +25,57 @@ properties:
     type: array
     items: { type: string, pattern: "^[a-z0-9-]{1,20}$" }
     uniqueItems: true
+  language:
+    type: string
+    maxLength: 50
+    description: "Primary language for the prompt (e.g., 'en', 'es', 'fr')"
+  model_hint:
+    type: string
+    maxLength: 100
+    description: "Recommended AI model for this prompt (e.g., 'gpt-4', 'claude-3')"
+  from:
+    type: string
+    maxLength: 500
+    description: "URL or file path to parent manifest for inheritance"
+  persona:
+    type: object
+    additionalProperties: false
+    properties:
+      name: { type: string, maxLength: 100 }
+      role: { type: string, maxLength: 100 }
+      personality:
+        type: array
+        items: { type: string, maxLength: 50 }
+        uniqueItems: true
+        maxItems: 10
+      expertise:
+        type: array
+        items: { type: string, maxLength: 50 }
+        uniqueItems: true
+        maxItems: 20
+      experience: { type: string, maxLength: 100 }
+      background: { type: string, maxLength: 500 }
+      tone: { type: string, maxLength: 50 }
+      style: { type: string, maxLength: 50 }
+      language_level: { type: string, maxLength: 50 }
+      approach: { type: string, maxLength: 50 }
+      focus:
+        type: array
+        items: { type: string, maxLength: 50 }
+        uniqueItems: true
+        maxItems: 10
+      interaction_style: { type: string, maxLength: 200 }
+      constraints:
+        type: array
+        items: { type: string, maxLength: 200 }
+        uniqueItems: true
+        maxItems: 10
+      preferences:
+        type: array
+        items: { type: string, maxLength: 200 }
+        uniqueItems: true
+        maxItems: 10
+      output_format: { type: string, maxLength: 50 }
   variables:
     type: array
     items:

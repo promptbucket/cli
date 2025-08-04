@@ -9,6 +9,11 @@ coverage.out
 # Generated files
 pbt_completion.*
 examples/hello/*.pbt
+examples/*/final_prompt.md
+examples/*/*.promptbucket
+# Environment files
+.env.local
+.env.*.local
 # Modules
 vendor/
 .gomodcache/

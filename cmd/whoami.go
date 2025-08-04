@@ -38,11 +38,11 @@ var whoamiCmd = &cobra.Command{
 		fmt.Printf("👤 Current User:\n")
 		fmt.Printf("   Email: %s\n", token.Email)
 		fmt.Printf("   User ID: %s\n", token.UserID)
-		
+
 		if token.Name != "" {
 			fmt.Printf("   Name: %s\n", token.Name)
 		}
-		
+
 		if token.Provider != "" {
 			fmt.Printf("   Provider: %s\n", token.Provider)
 		}

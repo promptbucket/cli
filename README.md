@@ -32,7 +32,7 @@ Download the appropriate binary for your platform from the [releases page](https
 
 ### Package Management
 - `promptbucket init` – scaffold `promptbucket.yaml`.
-- `promptbucket build` – create a `.pbt` archive.
+- `promptbucket build` – create a `.promptbucket` archive.
 - `promptbucket completion` – generate shell completions.
 
 ### Authentication
@@ -85,9 +85,36 @@ For OAuth authentication to work, your backend needs to:
 
 #### Configuration
 
-Environment variables:
+The CLI supports configuration through environment variables and `.env` files.
+
+**Environment Variables:**
 - `PROMPTBUCKET_BASE_URL` - API base URL (default: https://harbor.promptbucket.co)
 - `PROMPTBUCKET_API_VERSION` - API version (default: v1)
+
+**Environment Files:**
+The CLI automatically loads environment variables from `.env` files in the following order:
+
+1. `.env` - Base environment file (should be committed)
+2. `.env.local` - Local overrides (should be gitignored)
+3. `.env.{ENVIRONMENT}` - Environment-specific (e.g., `.env.production`)
+4. `.env.{ENVIRONMENT}.local` - Environment-specific local overrides
+
+Later files override earlier ones. Set `DEBUG=true` to see which files are loaded.
+
+**Example .env file:**
+```bash
+# .env
+PROMPTBUCKET_BASE_URL=https://api.promptbucket.io
+PROMPTBUCKET_API_VERSION=v2
+ENVIRONMENT=development
+```
+
+**Example .env.local file:**
+```bash
+# .env.local (gitignored - for local development only)
+PROMPTBUCKET_BASE_URL=http://localhost:8080
+DEBUG=true
+```
 
 ## Development
 
@@ -106,6 +133,97 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-## Example
+## Examples
 
-See [examples/hello](examples/hello) for a sample manifest.
+### Basic Example
+See [examples/hello](examples/hello) for a simple greeting persona.
+
+### Advanced Examples
+- [examples/code-reviewer](examples/code-reviewer) - Senior software engineer for code reviews
+- [examples/data-analyst](examples/data-analyst) - Expert data analyst with statistical background
+
+## Manifest Structure
+
+### Basic Fields
+```yaml
+name: my-persona          # Required: lowercase, alphanumeric with dashes/underscores
+version: 0.1.0           # Required: semantic versioning
+licence: Apache-2.0      # Required: license identifier
+description: Brief description of the persona
+authors: [Your Name]     # Optional: list of authors
+tags: [ai, assistant]    # Optional: categorization tags
+```
+
+### Persona Configuration
+Define rich character details that eliminate the need for "You are..." statements:
+
+```yaml
+persona:
+  # Identity
+  name: Alex the Code Reviewer        # Persona's name
+  role: Senior Software Engineer      # Professional role
+  personality: [thorough, friendly]   # Character traits
+  
+  # Expertise & Background
+  expertise: [Python, Go, Security]   # Technical skills
+  experience: 8+ years               # Experience level
+  background: CS degree with focus on distributed systems
+  
+  # Communication Style
+  tone: professional                 # Communication tone
+  style: structured                  # Response style
+  language_level: expert-level       # Technical complexity
+  interaction_style: asks clarifying questions
+  
+  # Behavioral Traits
+  approach: systematic               # Problem-solving method
+  focus: [security, performance]    # Priority areas
+  constraints: [always explain reasoning]
+  preferences: [provide code examples]
+  output_format: structured markdown
+```
+
+### Variables & Prompts
+```yaml
+variables:
+  - name: language
+    description: Programming language being reviewed
+    example: Python
+    enum: [Python, Go, JavaScript]  # Optional: restrict to specific values
+
+prompt: |-
+  Review the provided {{language}} code.
+  Focus on code quality and best practices.
+```
+
+## How Personas Work
+
+When you build or run a prompt with a persona defined, the system automatically generates a comprehensive character description that precedes your main prompt:
+
+```markdown
+# Identity
+You are Alex the Code Reviewer, a Senior Software Engineer.
+
+# Background & Expertise
+Experience: 8+ years
+Areas of expertise: Python, Go, Security
+
+# Communication Style
+Personality traits: thorough, friendly
+Tone: professional
+Communication style: structured
+
+# Guidelines
+Constraints:
+- always explain reasoning
+
+Preferences:
+- provide code examples
+
+---
+
+Review the provided Python code.
+Focus on code quality and best practices.
+```
+
+This eliminates repetitive "You are..." statements and creates consistent, well-defined AI assistants.
