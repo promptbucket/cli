@@ -5,20 +5,27 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/subosito/gotenv"
 )
 
-var version = "dev"
+// Persistent flag values accessible by subcommands.
+var (
+	ciMode      bool
+	concurrency int
+	configFile  string
+	apiKey      string
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "promptbucket",
-	Short: "PromptBucket CLI",
+	Short: "Open-source AI eval and testing CLI",
+	Long:  "PromptBucket — test prompts across models, assert quality, and catch regressions.",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
 }
 
+// Execute runs the root command.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -27,42 +34,32 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolP("version", "v", false, "print version")
-	viper.BindPFlag("version", rootCmd.PersistentFlags().Lookup("version"))
-	
-	// Load .env files before setting up viper
+	// Load .env files before anything else.
 	loadEnvFiles()
-	
-	// Setup viper after .env files are loaded
-	viper.AutomaticEnv()
-	
-	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		if viper.GetBool("version") {
-			fmt.Println(version)
-			os.Exit(0)
-		}
-	}
+
+	rootCmd.PersistentFlags().BoolVar(&ciMode, "ci", false, "CI mode — exit 1 on any failure")
+	rootCmd.PersistentFlags().IntVar(&concurrency, "concurrency", 4, "max concurrent provider calls")
+	rootCmd.PersistentFlags().StringVar(&configFile, "config", "promptbucket.yaml", "config file path")
+	rootCmd.PersistentFlags().StringVar(&apiKey, "api-key", "", "PromptBucket API key (env PROMPTBUCKET_API_KEY)")
 }
 
-// loadEnvFiles loads environment variables from .env files in order of precedence
+// loadEnvFiles loads environment variables from .env files in order of precedence.
 func loadEnvFiles() {
 	envFiles := []string{
-		".env",           // Base environment file
-		".env.local",     // Local overrides (should be gitignored)
+		".env",
+		".env.local",
 	}
-	
-	// Add environment-specific files if ENVIRONMENT is set
+
 	if env := os.Getenv("ENVIRONMENT"); env != "" {
 		envFiles = append(envFiles, fmt.Sprintf(".env.%s", env))
 		envFiles = append(envFiles, fmt.Sprintf(".env.%s.local", env))
 	}
-	
-	// Load files in reverse order so later files can override earlier ones
+
+	// Load files in reverse order so later files can override earlier ones.
 	for i := len(envFiles) - 1; i >= 0; i-- {
 		envFile := envFiles[i]
 		if _, err := os.Stat(envFile); err == nil {
 			if err := gotenv.OverLoad(envFile); err == nil {
-				// Only log successful loads in debug mode to avoid noise
 				if os.Getenv("DEBUG") != "" {
 					fmt.Fprintf(os.Stderr, "Loaded environment from %s\n", envFile)
 				}

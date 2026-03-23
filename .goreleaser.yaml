@@ -56,7 +56,7 @@ brews:
       name: goreleaserbot
       email: bot@goreleaser.com
     homepage: https://github.com/promptbucket/cli
-    description: "A CLI tool for managing prompt buckets"
+    description: "Open-source AI eval and testing CLI"
     license: MIT
     install: |
       bin.install "promptbucket"
@@ -70,7 +70,7 @@ nfpms:
     vendor: PromptBucket
     homepage: https://github.com/promptbucket/cli
     maintainer: PromptBucket Team <team@promptbucket.com>
-    description: A CLI tool for managing prompt buckets
+    description: Open-source AI eval and testing CLI
     license: MIT
     formats:
       - deb
