@@ -12,14 +12,18 @@ import (
 var (
 	ciMode      bool
 	concurrency int
-	configFile  string
 	apiKey      string
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "promptbucket",
-	Short: "Open-source AI eval and testing CLI",
-	Long:  "PromptBucket — test prompts across models, assert quality, and catch regressions.",
+	Short: "Stop re-explaining your project to AI every day",
+	Long: `PromptBucket — persistent AI personas for developers.
+
+Run 'promptbucket init' to scaffold a persona in your project.
+Run 'promptbucket serve' to start an MCP server for Claude Code, Cursor, or Cline.
+
+Your persona's context stays with your project. Your AI remembers.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
@@ -39,7 +43,6 @@ func init() {
 
 	rootCmd.PersistentFlags().BoolVar(&ciMode, "ci", false, "CI mode — exit 1 on any failure")
 	rootCmd.PersistentFlags().IntVar(&concurrency, "concurrency", 4, "max concurrent provider calls")
-	rootCmd.PersistentFlags().StringVar(&configFile, "config", "promptbucket.yaml", "config file path")
 	rootCmd.PersistentFlags().StringVar(&apiKey, "api-key", "", "PromptBucket API key (env PROMPTBUCKET_API_KEY)")
 }
 

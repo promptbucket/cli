@@ -56,7 +56,7 @@ brews:
       name: goreleaserbot
       email: bot@goreleaser.com
     homepage: https://github.com/promptbucket/cli
-    description: "Open-source AI eval and testing CLI"
+    description: "Portable AI persona runtime — stop re-explaining your project to AI every day"
     license: MIT
     install: |
       bin.install "promptbucket"
@@ -70,7 +70,7 @@ nfpms:
     vendor: PromptBucket
     homepage: https://github.com/promptbucket/cli
     maintainer: PromptBucket Team <team@promptbucket.com>
-    description: Open-source AI eval and testing CLI
+    description: Portable AI persona runtime — stop re-explaining your project to AI every day
     license: MIT
     formats:
       - deb
@@ -102,11 +102,6 @@ release:
   prerelease: auto
   mode: replace
   header: |
-    ## Release {{ .Tag }}
-    
-    Welcome to this new release!
-  footer: |
-    ## Docker Images
-    
-    - `ghcr.io/promptbucket/cli:{{ .Tag }}`
-    - `ghcr.io/promptbucket/cli:latest`
+    ## PromptBucket {{ .Tag }}
+
+    Portable AI persona runtime. Run `promptbucket init` to create a persona, `promptbucket serve` to expose it as an MCP server.
